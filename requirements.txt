@@ -1,0 +1,7 @@
+click
+databricks-cli
+mlflow
+numpy
+pytest
+pandas
+scikit-learn
