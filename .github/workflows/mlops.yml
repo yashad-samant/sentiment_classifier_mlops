@@ -1,27 +1,33 @@
-name: databricks-cicd
-...
+name: DB-Deployment
+
+on:
+  pull_request:
+    branches:
+      - dev
+
 jobs:
-  main:
+  deploy:
     runs-on: ubuntu-latest
-    # Name of the environment you created
-    environment: my-environment
-    ...
+
     steps:
-      - name: Check out the repository
+      - name: Checkout the repository
         uses: actions/checkout@v3
 
-      # Install databricks CLI as per https://docs.databricks.com/dev-tools/cli/databricks-cli.html
-      - name: Install databricks CLI
-        run: |
-         curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.11'
 
-      # List the databricks repos within the workspace whose credentials
-      # are stored in the Github Environment "my-environment"
-      - name: List databricks repos
-        env:
-          # Note the host is an "environment variable" in the Github Environment
-          # while the token is a "secret" in the Github Environment
-          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      - name: Install Databricks CLI
+        run: |
+          pip install databricks-cli
+
+      - name: Configure Databricks CLI
+        run: |
+          databricks configure --url ${{ vars.DATABRICKS_URL }} --token ${{ secrets.DATABRICKS_TOKEN }}
+
+      - name: Sync the branch with Databricks workspace
         run: |
           databricks repos list
+
+
