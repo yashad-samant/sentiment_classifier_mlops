@@ -28,4 +28,4 @@ jobs:
 
       - name: Run Tests
         run: |
-          pytest tests --disable-warnings
+          pytest /Workspace/dev/sentiment_classifier_mlops/tests --disable-warnings
