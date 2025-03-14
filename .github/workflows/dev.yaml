@@ -28,4 +28,4 @@ jobs:
 
       - name: Run Tests
         run: |
-          pytest --disable-warnings --maxfail=3  # Runs tests, stops after 3 failures
+          pytest tests --disable-warnings
