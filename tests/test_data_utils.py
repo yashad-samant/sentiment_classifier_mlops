@@ -2,7 +2,7 @@ import os
 import pytest
 import pandas as pd
 from pathlib import Path
-from scripts.data_utils import Data
+from sentiment_classifier_mlops.scripts.data_utils import Data
 
 
 #test_data = Path("/Workspace/data/test/sentimentdataset_sampled.csv")
@@ -75,6 +75,5 @@ def test_split_invalid_split_ratios(sample_csv):
     """Test handling of invalid split ratios."""
     data_obj = Data(file_path=str(sample_csv), holdout=True, test_size=0.6, holdout_size=0.6)
     data_obj.read()
-    
     with pytest.raises(Exception, match="Error splitting data"):
         data_obj.split()
