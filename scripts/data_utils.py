@@ -37,6 +37,7 @@ class Data:
             raise Exception(f'Error reading file. {str(e)}')
     
     def split(self) -> None:
+        holdout = None
         try:
             if self.holdout:
                 train_test, holdout = train_test_split(self.df, test_size=self.holdout_size, random_state=42, shuffle=True, stratify=self.stratify)
