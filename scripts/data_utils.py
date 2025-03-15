@@ -44,6 +44,10 @@ class Data:
     
     def split(self) -> None:
         holdout = None
+        if self.stratify:
+            stratify = self.df[self.stratify]
+        else:
+            stratify = None
         try:
             if self.holdout and (self.holdout_size + self.test_size >= 1.0):
                 raise ValueError("holdout_size and test_size combined must be less than 1.0")
@@ -53,7 +57,7 @@ class Data:
                                                        test_size=self.holdout_size,
                                                        random_state=42,
                                                        shuffle=True,
-                                                       stratify=self.df[self.stratify])
+                                                       stratify=stratify)
                 holdout['split'] = ['holdout']*len(holdout)
             else:
                 train_test = self.df
@@ -62,7 +66,7 @@ class Data:
                                            test_size=self.test_size,
                                            random_state=42,
                                            shuffle=True,
-                                           stratify=self.df[self.stratify])
+                                           stratify=stratify)
             train['split'], test['split'] = ['train']*len(train), ['test']*len(test)
             self.df = pd.concat([train, test] + (
                 [holdout] if holdout is not None else []))

@@ -12,7 +12,7 @@ def sample_csv(tmp_path):
     """Creates a sample CSV file for testing."""
     data = pd.DataFrame({
         'feature1': [random.randint(1, 100) for _ in range(50)],
-        'feature2': [random.randint(1, 100) for _ in range(0)],
+        'feature2': [random.randint(1, 100) for _ in range(50)],
         'label': [0, 1] * 25
     })
     print(data)
