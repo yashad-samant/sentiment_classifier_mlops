@@ -15,7 +15,7 @@ class Data:
         holdout_size (float): The percentage of the data to be used for holdout. The default is 0.5. This field is optional if hold_split is False.
         stratify (List[str]): A list of columns to stratify on.
     """
-    def __init__(self, file_path: str, holdout: bool = False, test_size: float = 0.2, holdout_size: float = 0.5, stratify: Optional[List[str] = None]):
+    def __init__(self, file_path: str, holdout: bool = False, test_size: float = 0.2, holdout_size: float = 0.5, stratify: Optional[List[str]] = None):
         self.file_path = file_path
         self.holdout = holdout
         self.test_size = test_size
