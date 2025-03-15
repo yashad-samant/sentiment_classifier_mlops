@@ -39,12 +39,12 @@ class Data:
     def split(self) -> None:
         try:
             if self.holdout:
-                train_test, holdout = train_test_split(self.df, test_split=self.holdout_size, random_state=42, shuffle=True, stratify=self.stratify)
+                train_test, holdout = train_test_split(self.df, test_size=self.holdout_size, random_state=42, shuffle=True, stratify=self.stratify)
                 holdout['split'] = ['holdout']*len(holdout)
             else:
                 train_test = self.df
 
-            train, test = train_test_split(train_test, test_split=self.test_size, random_state=42, shuffle=True, stratify=self.stratify)
+            train, test = train_test_split(train_test, test_size=self.test_size, random_state=42, shuffle=True, stratify=self.stratify)
             train['split'], test['split'] = ['train']*len(train), ['test']*len(test)
             
             self.df = pd.concat([train, test] + ([holdout] if holdout is not None else []))
