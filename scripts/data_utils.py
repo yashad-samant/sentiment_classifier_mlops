@@ -57,7 +57,7 @@ class Data:
                                                        test_size=self.holdout_size,
                                                        random_state=42,
                                                        shuffle=True,
-                                                       stratify=stratify)
+                                                       stratify=(self.df[self.stratify] or None))
                 holdout['split'] = ['holdout']*len(holdout)
             else:
                 train_test = self.df
@@ -66,7 +66,7 @@ class Data:
                                            test_size=self.test_size,
                                            random_state=42,
                                            shuffle=True,
-                                           stratify=stratify)
+                                           stratify=(train_test[self.stratify] or None))
             train['split'], test['split'] = ['train']*len(train), ['test']*len(test)
             self.df = pd.concat([train, test] + (
                 [holdout] if holdout is not None else []))
@@ -93,7 +93,3 @@ class Data:
 def generate_data(file_path, holdout, test_split_ratio, holdout_split_ratio, stratify):
     data_obj = Data(file_path, holdout, test_split_ratio, holdout_split_ratio, stratify)
     return data_obj
-    
-
-if __name__ == '__main__':
-    generate_data()
