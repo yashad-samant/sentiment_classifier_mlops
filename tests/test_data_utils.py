@@ -12,7 +12,7 @@ def sample_csv(tmp_path):
     """Creates a sample CSV file for testing."""
     data = pd.DataFrame({
         'feature1': [random.randint(1, 100) for _ in range(50)],
-        'feature2': [random.randint(1, 100) for _ in range(50)],
+        'feature2': [random.randint(1, 100) for _ in range(0)],
         'label': [0, 1] * 25
     })
     print(data)
@@ -76,5 +76,5 @@ def test_split_invalid_split_ratios(sample_csv):
     """Test handling of invalid split ratios."""
     data_obj = Data(file_path=str(sample_csv), holdout=True, test_size=0.6, holdout_size=0.6)
     data_obj.read()
-    with pytest.raises(Exception, match="Error splitting data"):
+    with pytest.raises(Exception, match=ValueError("holdout_size and test_size combined must be less than 1.0")):
         data_obj.split()
