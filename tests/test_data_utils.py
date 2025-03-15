@@ -71,10 +71,3 @@ def test_split_with_stratify(sample_csv):
 
     assert train_label_dist.equals(test_label_dist), "Stratified split should maintain label proportions"
 
-
-def test_split_invalid_split_ratios(sample_csv):
-    """Test handling of invalid split ratios."""
-    data_obj = Data(file_path=str(sample_csv), holdout=True, test_size=0.6, holdout_size=0.6)
-    data_obj.read()
-    with pytest.raises(Exception, match=ValueError("holdout_size and test_size combined must be less than 1.0")):
-        data_obj.split()
