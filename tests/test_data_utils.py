@@ -2,9 +2,9 @@ import os
 import pytest
 import pandas as pd
 from pathlib import Path
-from sentiment_classifier_mlops.scripts.data_utils import Data
+#from sentiment_classifier_mlops.scripts.data_utils import Data
 
-
+print(os.getcwd())
 #test_data = Path("/Workspace/data/test/sentimentdataset_sampled.csv")
 
 @pytest.fixture
