@@ -23,7 +23,7 @@ jobs:
       # Install Databricks CLI
       #----------------------------------------------
       - name: Install Databricks CLI
-        uses: ./.github/actions/db-cli-install
+        uses: ./sentiment_classifier_mlops/.github/actions/db-cli-install
 #      - name: List databricks repos
 #        env:
           # Note the host is an "environment variable" in the Github Environment
