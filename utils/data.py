@@ -4,7 +4,7 @@ from typing import List, Optional
 from sklearn.model_selection import train_test_split
 
 
-class Data:
+class DataPipeline:
     """
     A one pass class for managing everything Data. 
 
@@ -44,10 +44,12 @@ class Data:
     
     def split(self) -> None:
         holdout = None
-        if self.stratify:
-            stratify = self.df[self.stratify]
-        else:
-            stratify = None
+        def fix_stratify(df, stratify):
+            if stratify:
+                stratify = df[stratify]
+            else:
+                stratify = None
+            return stratify
         try:
             if self.holdout and (self.holdout_size + self.test_size >= 1.0):
                 raise ValueError("holdout_size and test_size combined must be less than 1.0")
@@ -57,7 +59,7 @@ class Data:
                                                        test_size=self.holdout_size,
                                                        random_state=42,
                                                        shuffle=True,
-                                                       stratify=stratify)
+                                                       stratify=fix_stratify(self.df, self.stratify))
                 holdout['split'] = ['holdout']*len(holdout)
             else:
                 train_test = self.df
@@ -66,14 +68,22 @@ class Data:
                                            test_size=self.test_size,
                                            random_state=42,
                                            shuffle=True,
-                                           stratify=stratify)
+                                           stratify=fix_stratify(train_test, self.stratify))
             train['split'], test['split'] = ['train']*len(train), ['test']*len(test)
             self.df = pd.concat([train, test] + (
                 [holdout] if holdout is not None else []))
-
         except Exception as e:
             raise Exception(f'Error splitting data. {str(e)}')
+        
+    def get_train_data(self):
+        return self.df[self.df['split'] == 'train']
+
+    def get_test_data():
+        return self.df[self.df['split'] == 'test']
     
+    def get_holdout_data():
+        return self.df[self.df['split'] == 'holdout']
+
     def create_distributions():
         raise NotImplementedError()
 
@@ -91,9 +101,13 @@ class Data:
 @click.option('--stratify', type=List[str], default=None, 
               help='A list of columns to stratify on.')
 def generate_data(file_path, holdout, test_split_ratio, holdout_split_ratio, stratify):
-    data_obj = Data(file_path, holdout, test_split_ratio, holdout_split_ratio, stratify)
+    data_obj = Data(
+        file_path,
+        holdout,
+        test_split_ratio,
+        holdout_split_ratio,
+        stratify
+    )
+    data_obj.read()
+    data_obj.split()
     return data_obj
-    
-
-if __name__ == '__main__':
-    generate_data()

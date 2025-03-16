@@ -1,0 +1,9 @@
+name: 'databricks-cli-install'
+description: 'Install latest version of the databricks CLI'
+runs:
+  using: "composite"
+  steps:
+    # this is the new CLI, distributed as a standalone executable that doesnt need Python: https://docs.databricks.com/dev-tools/cli/databricks-cli.html
+    - shell: bash
+      run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
