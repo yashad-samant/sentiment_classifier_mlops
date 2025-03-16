@@ -23,7 +23,7 @@ def sample_csv(tmp_path):
 
 def test_read_valid_csv(sample_csv):
     """Test if the read method correctly reads a CSV file."""
-    data_obj = Data(file_path=str(sample_csv))
+    data_obj = DataPipeline(file_path=str(sample_csv))
     data_obj.read()
     assert hasattr(data_obj, 'df'), "DataFrame attribute should be created"
     assert not data_obj.df.empty, "DataFrame should not be empty"
@@ -32,14 +32,14 @@ def test_read_valid_csv(sample_csv):
 
 def test_read_invalid_file():
     """Test if the read method raises an exception for unsupported file formats."""
-    data_obj = Data(file_path="invalid_file.txt")
+    data_obj = DataPipeline(file_path="invalid_file.txt")
     with pytest.raises(Exception, match="Unsupported file format"):
         data_obj.read()
 
 
 def test_split_without_holdout(sample_csv):
     """Test splitting data without a holdout set."""
-    data_obj = Data(file_path=str(sample_csv), holdout=False, test_size=0.3)
+    data_obj = DaDataPipelineta(file_path=str(sample_csv), holdout=False, test_size=0.3)
     data_obj.read()
     data_obj.split()
 
@@ -51,7 +51,7 @@ def test_split_without_holdout(sample_csv):
 
 def test_split_with_holdout(sample_csv):
     """Test splitting data with a holdout set."""
-    data_obj = Data(file_path=str(sample_csv), holdout=True, test_size=0.3, holdout_size=0.4)
+    data_obj = DataPipeline(file_path=str(sample_csv), holdout=True, test_size=0.3, holdout_size=0.4)
     data_obj.read()
     data_obj.split()
 
@@ -62,7 +62,7 @@ def test_split_with_holdout(sample_csv):
 
 def test_split_with_stratify(sample_csv):
     """Test stratified splitting."""
-    data_obj = Data(file_path=str(sample_csv), holdout=False, test_size=0.2, stratify=['label'])
+    data_obj = DataPipeline(file_path=str(sample_csv), holdout=False, test_size=0.2, stratify=['label'])
     data_obj.read()
     data_obj.split()
 
