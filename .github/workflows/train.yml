@@ -1,0 +1,34 @@
+name: Train Classification Model on Databricks
+
+on:
+  schedule:
+    - cron: "0 0 1 */1 *"  # Runs at midnight on the 1st of every month
+  workflow_dispatch:  # Allows manual execution
+
+#concurrency: my_environment-train_model
+
+jobs:
+  train_model:
+    runs-on: ubuntu-latest
+    environment: MY_ENV  # Ensure this environment has Databricks secrets
+
+    steps:
+      #----------------------------------------------
+      # Check out repository
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      #----------------------------------------------
+      # Install Databricks CLI
+      #----------------------------------------------
+      - name: Install Databricks CLI
+        uses: ./.github/actions/db-cli-install
+#      - name: List databricks repos
+#        env:
+          # Note the host is an "environment variable" in the Github Environment
+          # while the token is a "secret" in the Github Environment
+#          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+#          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+#        run: |
+#          databricks repos list
