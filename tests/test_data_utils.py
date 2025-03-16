@@ -39,7 +39,7 @@ def test_read_invalid_file():
 
 def test_split_without_holdout(sample_csv):
     """Test splitting data without a holdout set."""
-    data_obj = DaDataPipelineta(file_path=str(sample_csv), holdout=False, test_size=0.3)
+    data_obj = DataPipeline(file_path=str(sample_csv), holdout=False, test_size=0.3)
     data_obj.read()
     data_obj.split()
 
