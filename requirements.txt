@@ -1,6 +1,7 @@
 click
 databricks-cli
 mlflow
+nltk
 numpy
 pytest
 pandas
