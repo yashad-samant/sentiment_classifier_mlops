@@ -3,7 +3,7 @@ import random
 import pytest
 import pandas as pd
 from pathlib import Path
-from scripts.data_utils import Data
+from utils.data import DataPipeline
 
 #test_data = Path("/Workspace/data/test/sentimentdataset_sampled.csv")
 
