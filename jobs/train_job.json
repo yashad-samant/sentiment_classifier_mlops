@@ -4,12 +4,13 @@
     {
       "task_key": "test-run",
       "notebook_task": {
-        "notebook_path": "/Workspace/dev/sentiment_classifier_mlops/notebooks/test",
+        "notebook_path": "/Workspace/dev/sentiment_classifier_mlops/notebooks/train_job",
         "base_parameters": {
-          "dataset": "s3://your-bucket/dataset.csv",
-          "train_split": "0.8",
-          "test_split": "0.2",
-          "random_seed": "42"
+          "file_path": "/Workspace/data/data.csv",
+          "holdout": true,
+          "test_size": 0.2,
+          "holdout_size": 0.5,
+          "stratify": "['Sentiment']"
         }
       }
     }

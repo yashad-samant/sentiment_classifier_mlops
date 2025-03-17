@@ -88,18 +88,6 @@ class DataPipeline:
         raise NotImplementedError()
 
 
-@click.command()
-@click.option('--file_path', type=str, required=True,
-              help='The path to the file containing the data.')
-@click.option('--holdout', type=bool, default=False,
-              help='Returns a third split called holdout split. The default is True.')
-@click.option('--test_split_ratio', type=float, default=0.2, 
-              help='The percentage of the data to be used for testing. The default is 0.2.')
-@click.option('--holdout_split_ratio', type=float, default=0.5,
-              help='The percentage of the data to be used for holdout.'
-              'The default is 0.5. This field is optional if hold_split is False.')
-@click.option('--stratify', type=List[str], default=None, 
-              help='A list of columns to stratify on.')
 def generate_data(file_path, holdout, test_split_ratio, holdout_split_ratio, stratify):
     data_obj = Data(
         file_path,
