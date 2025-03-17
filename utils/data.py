@@ -88,13 +88,13 @@ class DataPipeline:
         raise NotImplementedError()
 
 
-def generate_data(file_path, holdout, test_split_ratio, holdout_split_ratio, stratify):
+def generate_data(file_path, holdout, test_size, holdout_size, stratify):
     data_obj = Data(
-        file_path,
-        holdout,
-        test_split_ratio,
-        holdout_split_ratio,
-        stratify
+        file_path=file_path,
+        holdout=holdout,
+        test_size=test_size,
+        holdout_size=holdout_size,
+        stratify=stratify
     )
     data_obj.read()
     data_obj.split()
