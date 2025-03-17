@@ -4,7 +4,7 @@
     {
       "task_key": "test-run",
       "notebook_task": {
-        "notebook_path": "/Workspace/dev/sentiment_classifier_mlops/notebooks/train_job",
+        "notebook_path": "/Workspace/dev/sentiment_classifier_mlops/notebooks/train_models",
         "base_parameters": {
           "file_path": "/Workspace/data/data.csv",
           "holdout": true,
