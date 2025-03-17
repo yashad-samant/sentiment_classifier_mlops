@@ -1,0 +1,12 @@
+{
+  "name": "Monthly_Model_Training",
+  "notebook_task": {
+    "notebook_path": "/Workspace/dev/sentiment_classifier_mlops/notebooks/test.ipynb",
+    "base_parameters": {
+      "dataset": "s3://your-bucket/dataset.csv",
+      "train_split": "0.8",
+      "test_split": "0.2",
+      "random_seed": "42"
+    }
+  }
+}
