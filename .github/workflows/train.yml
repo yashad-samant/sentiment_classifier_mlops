@@ -37,7 +37,7 @@ jobs:
       #----------------------------------------------
       # Create Databricks Job
       #----------------------------------------------
-      - name: Create Databricks Job
+      - name: Create & Run Databricks Job
         env:
           # Note the host is an "environment variable" in the Github Environment
           # while the token is a "secret" in the Github Environment
