@@ -44,18 +44,19 @@ jobs:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_URL }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          JOB_ID=$(databricks jobs create --json "@jobs/train_job.json" | jq -r '.job_id')
+          JOB_ID=$(databricks jobs submit --json "@jobs/train_job.json" | jq -r '.job_id')
           echo "JOB_ID=$JOB_ID" >> $GITHUB_ENV
+
 
       #----------------------------------------------
       # Run Databricks Job
       #----------------------------------------------
-      - name: Run Databricks Job
-        env:
-          # Note the host is an "environment variable" in the Github Environment
-          # while the token is a "secret" in the Github Environment
-          DATABRICKS_HOST: ${{ vars.DATABRICKS_URL }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-        run: |
-          RUN_ID=$(databricks jobs run-now --json "{\"job_id\": $JOB_ID}" | jq -r '.run_id')
-          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+      #- name: Run Databricks Job
+      #  env:
+      #    # Note the host is an "environment variable" in the Github Environment
+      #    # while the token is a "secret" in the Github Environment
+      #    DATABRICKS_HOST: ${{ vars.DATABRICKS_URL }}
+      #    DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      #  run: |
+      #    RUN_ID=$(databricks jobs run-now --json "{'job_id': /$JOB_ID/}" | jq -r '.run_id')
+      #    echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
