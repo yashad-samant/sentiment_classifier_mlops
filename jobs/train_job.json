@@ -1,5 +1,5 @@
 {
-  "name": "Monthly_Model_Training",
+  "run_name": "Monthly_Model_Training",
   "tasks": [
     {
       "task_key": "test-run",
