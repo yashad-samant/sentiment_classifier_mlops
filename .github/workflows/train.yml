@@ -57,5 +57,5 @@ jobs:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_URL }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          RUN_ID=$(databricks jobs run-now --json '{"job_id": $JOB_ID}' | jq -r '.run_id')
+          RUN_ID=$(databricks jobs run-now --json '{"job_id": ${{ JOB_ID }} }' | jq -r '.run_id')
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
