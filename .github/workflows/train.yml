@@ -41,7 +41,7 @@ jobs:
         env:
           # Note the host is an "environment variable" in the Github Environment
           # while the token is a "secret" in the Github Environment
-          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_URL }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
           JOB_ID=$(databricks jobs create --json '/Workspace/dev/jobs/train_job.json')
