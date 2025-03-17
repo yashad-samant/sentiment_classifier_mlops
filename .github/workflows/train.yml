@@ -44,7 +44,7 @@ jobs:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_URL }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          JOB_ID=$(databricks jobs create --json "@/jobs/train_job.json")
+          JOB_ID=$(databricks jobs create --json "@jobs/train_job.json")
           echo "JOB_ID=$JOB_ID" >> $GITHUB_ENV
 
       #----------------------------------------------
