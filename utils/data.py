@@ -89,7 +89,7 @@ class DataPipeline:
 
 
 def generate_data(file_path, holdout, test_size, holdout_size, stratify):
-    data_obj = Data(
+    data_obj = DataPipeline(
         file_path=file_path,
         holdout=holdout,
         test_size=test_size,
