@@ -78,10 +78,10 @@ class DataPipeline:
     def get_train_data(self):
         return self.df[self.df['split'] == 'train']
 
-    def get_test_data():
+    def get_test_data(self):
         return self.df[self.df['split'] == 'test']
     
-    def get_holdout_data():
+    def get_holdout_data(self):
         return self.df[self.df['split'] == 'holdout']
 
     def create_distributions():
