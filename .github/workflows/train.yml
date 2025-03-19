@@ -10,9 +10,6 @@ env:
   # while the token is a "secret" in the Github Environment
   DATABRICKS_HOST: ${{ vars.DATABRICKS_URL }}
   DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-  MLFLOW_ARTIFACTS_PATH: ${{ vars.MLFLOW_ARTIFACTS_PATH }}
-  MLFLOW_REGISTRY_URI: ${{ vars.MLFLOW_REGISTRY_URI }}
-  MLFLOW_TRACKING_URI: ${{ vars.MLFLOW_TRACKING_URI }}
 
 jobs:
   train_model:
@@ -41,6 +38,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      
+      - name: Set ENV Variables
+        run: |
+          echo "MLFLOW_ARTIFACTS_PATH=${{ vars.MLFLOW_ARTIFACTS_PATH }}" >> $GITHUB_ENV
+          echo "MLFLOW_REGISTRY_URI=${{ vars.MLFLOW_REGISTRY_URI }}" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_URI=${{ vars.MLFLOW_TRACKING_URI }}" >> $GITHUB_ENV
 
       #----------------------------------------------
       # Install Databricks CLI
