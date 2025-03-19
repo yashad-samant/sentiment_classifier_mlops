@@ -8,8 +8,13 @@
         "base_parameters": {
           "data_name": "sentiment_analysis",
           "data_version": "1.0.0",
+          "model_experiment_name": "naive-bayes-with-params",
           "model_type": "naive_bayes",
-          "model_params": {},
+          "model_params": {
+            "fit_prior": true,
+            "alpha": 1.0,
+            "class_prior": [0.6, 0.4]
+            },
           "holdout": true,
           "test_size": 0.2,
           "holdout_size": 0.5,
