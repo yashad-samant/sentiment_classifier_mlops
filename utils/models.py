@@ -45,6 +45,12 @@ def get_model_type(model_type: str):
     return models.get(model_type)
 
 
+class MLFlowUtils():
+    def __init__(self):
+        mlflow.login()
+        spark_ctx = db_connect.DatabricksSession.builder.serverless(True).getOrCreate()
+
+
 class ModelPipeline():
     """
     Model Pipeline for train and inference. This is a helper class to run the train and
@@ -85,10 +91,8 @@ class ModelPipeline():
             X_test (pd.DataFrame): The test data.
             y_test (pd.DataFrame): The test labels.
         """
+        mlflow.set_registry_uri("file:/Workspace")
         with mlflow.start_run():
-            # setting registry
-            mlflow.set_registry_uri("file:/Workspace")
-
             # gets the Sklearn model class based on the model type.
             model_shell = get_model_type(self.model_type)
 
@@ -124,13 +128,13 @@ class ModelPipeline():
             signature = infer_signature(X_test, predictions)
             
             # TODO: need to set tracking and registry uri in yaml files            
-            mlflow.set_registry_uri("file:/Workspace")
+            
 
             # logs and registers model.
             # by default the yaml will log the model in mlflow experiments and register the model in local folder.
             mlflow.sklearn.log_model(
                 sk_model=model,
-                artifact_path=ARTFACTS_PATH,
+                artifact_path=ARTIFACTS_PATH,
                 registered_model_name=self.model_name,
                 signature=signature)
             
