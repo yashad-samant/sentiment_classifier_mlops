@@ -91,7 +91,9 @@ class ModelPipeline():
             X_test (pd.DataFrame): The test data.
             y_test (pd.DataFrame): The test labels.
         """
+        # TODO: need to set tracking and registry uri in yaml files 
         mlflow.set_registry_uri("file:/Workspace")
+        
         with mlflow.start_run():
             # gets the Sklearn model class based on the model type.
             model_shell = get_model_type(self.model_type)
@@ -125,9 +127,7 @@ class ModelPipeline():
                     mlflow.log_param(key, value)
 
             # get the signature so that it can be used for verification while inferencing.
-            signature = infer_signature(X_test, predictions)
-            
-            # TODO: need to set tracking and registry uri in yaml files            
+            signature = infer_signature(X_test, predictions)           
             
 
             # logs and registers model.
