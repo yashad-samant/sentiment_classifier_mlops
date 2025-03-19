@@ -21,8 +21,7 @@ from utils.data import DataPipeline
 
 # setting uri
 ARTIFACTS_PATH = "artifacts"
-MLFLOW_TRACKING_URI = "databricks"
-MLFLOW_REGISTRY_URI = "file:/Workspace"
+mlflow.set_tracking_uri("databricks")
 
 
 def get_model_type(model_type: str):
@@ -87,6 +86,9 @@ class ModelPipeline():
             y_test (pd.DataFrame): The test labels.
         """
         with mlflow.start_run():
+            # setting registry
+            mlflow.set_registry_uri("file:/Workspace")
+
             # gets the Sklearn model class based on the model type.
             model_shell = get_model_type(self.model_type)
 
