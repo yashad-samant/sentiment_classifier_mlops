@@ -5,6 +5,9 @@ from typing import List, Optional
 from sklearn.model_selection import train_test_split
 
 
+DATA_PATH = '/Workspace/data'
+
+
 class DataPipeline:
     """
     A one pass class for managing everything Data. 
@@ -29,20 +32,22 @@ class DataPipeline:
         holdout_size: float = 0.5,
         stratify: Optional[List[str]] = None):
         
+
         self.holdout = holdout
         self.test_size = test_size
         self.holdout_size = holdout_size
         self.stratify = stratify
-        self.__name__ = name
-        self.__version__ = version
+        self.name = name
+        self.version = version
 
     def read(self) -> None:
         """
         Creates a dataframe attibute within the data object.
         """
         try:    
+            # TODO: Hardcoded schema. Should be made flexible later.
             self.df = pd.read_csv(os.path.join(
-                '/Workspace/data', self.__name__, self.__version__, 'data.csv'))
+                DATA_PATH, self.name, 'raw', 'data.csv'))
         except Exception as e:
             raise Exception(f'Error reading file. {str(e)}')
     
@@ -91,6 +96,7 @@ class DataPipeline:
             train['split'], test['split'] = ['train']*len(train), ['test']*len(test)
             self.df = pd.concat([train, test] + (
                 [holdout] if holdout is not None else []))
+
         except Exception as e:
             raise Exception(f'Error splitting data. {str(e)}')
         
@@ -121,7 +127,7 @@ class DataPipeline:
         raise NotImplementedError()
 
 
-def generate_data(
+def generate_and_save_data(
     name: str,
     version: str,
     holdout: bool,
@@ -129,7 +135,7 @@ def generate_data(
     holdout_size: float,
     stratify: Optional[List[str]]):
     """
-    Helper function to run DataPipeline class. 
+    Helper function to run DataPipeline class and generate processed data 
 
     Args:
         name (str): Name of the data.
@@ -152,4 +158,17 @@ def generate_data(
     )
     data_obj.read()
     data_obj.split()
-    return data_obj
+
+    if not os.path.exists(os.path.join(DATA_PATH, data_obj.name, data_obj.version)):
+        os.makedirs(os.path.join(DATA_PATH, data_obj.name, data_obj.version))
+    
+    data_obj.df.to_csv(
+        os.path.join(DATA_PATH, data_obj.name, data_obj.version, 'split.csv'))
+    
+
+def retrieve_data(name: str, version: str) -> pd.DataFrame:
+    """
+    Retrieve previously generated data
+    """
+    df = pd.read_csv(os.path.join(DATA_PATH, name, version, 'split.csv'))
+    return df
