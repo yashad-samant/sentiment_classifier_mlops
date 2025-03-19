@@ -10,7 +10,6 @@ class DataPipeline:
     A one pass class for managing everything Data. 
 
     Args:
-        file_path (str): The path to the file containing the data.
         name (str): Name of the data.
         version (str): Data version for tracking.
         holdout (bool): Returns a third split called holdout split. The default is True.
@@ -41,13 +40,9 @@ class DataPipeline:
         """
         Creates a dataframe attibute within the data object.
         """
-        try:
-            # Read the file and ensure that the file exists and ends with .csv extension
-            if self.file_path.endswith('.csv'):
-                self.df = pd.read_csv(os.path.join(
-                    '/Workspace/data', self.__name__, self.__version__, 'data.csv'))
-            else:
-                raise Exception('Unsupported file format. We only support CSV files!')
+        try:    
+            self.df = pd.read_csv(os.path.join(
+                '/Workspace/data', self.__name__, self.__version__, 'data.csv'))
         except Exception as e:
             raise Exception(f'Error reading file. {str(e)}')
     
