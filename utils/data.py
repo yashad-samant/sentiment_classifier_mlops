@@ -137,7 +137,6 @@ def generate_data(
     Helper function to run DataPipeline class. 
 
     Args:
-        file_path (str): The path to the file containing the data.
         name (str): Name of the data.
         version (str): Data version for tracking.
         holdout (bool): Returns a third split called holdout split. The default is True.
@@ -151,7 +150,6 @@ def generate_data(
     data_obj = DataPipeline(
         name=name,
         version=version,
-        file_path=file_path,
         holdout=holdout,
         test_size=test_size,
         holdout_size=holdout_size,
