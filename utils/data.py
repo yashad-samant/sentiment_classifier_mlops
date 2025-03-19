@@ -1,4 +1,4 @@
-import click
+# importing required libraries
 import pandas as pd
 from typing import List, Optional
 from sklearn.model_selection import train_test_split
@@ -10,6 +10,8 @@ class DataPipeline:
 
     Args:
         file_path (str): The path to the file containing the data.
+        name (str): Name of the data.
+        version (str): Data version for tracking.
         holdout (bool): Returns a third split called holdout split. The default is True.
         test_size (float): The percentage of the data to be used for testing.
                             The default is 0.2.
@@ -19,6 +21,8 @@ class DataPipeline:
         stratify (List[str]): A list of columns to stratify on.
     """
     def __init__(self, file_path: str,
+                 name: str,
+                 version: str,
                  holdout: bool = False,
                  test_size: float = 0.2,
                  holdout_size: float = 0.5,
@@ -28,13 +32,15 @@ class DataPipeline:
         self.test_size = test_size
         self.holdout_size = holdout_size
         self.stratify = stratify
-
+        self.__name__ = name
+        self.__version__ = version
 
     def read(self) -> None:
         """
         Creates a dataframe attibute within the data object.
         """
         try:
+            # Read the file and ensure that the file exists and ends with .csv extension
             if self.file_path.endswith('.csv'):
                 self.df = pd.read_csv(self.file_path)
             else:
@@ -43,17 +49,32 @@ class DataPipeline:
             raise Exception(f'Error reading file. {str(e)}')
     
     def split(self) -> None:
-        holdout = None
+        """
+        This is a helper function to divide the dataset into validation splits.
+        The data is divided into train and test splits by default and has an option
+        to get the third split called holdout split. The splits are saved in a new pandas
+        column called splits which can include train, test and optionally holdout.
+        """
+        
         def fix_stratify(df, stratify):
+            """
+            This is a helper function to handle how stratification is handled in pandas dataframe.
+            """
             if stratify:
                 stratify = df[stratify]
             else:
                 stratify = None
             return stratify
+        
         try:
+            # initialized holdout to be None 
+            holdout = None
+            # checks if the ratio of train dataset > 0. If not, we raise an exception.
             if self.holdout and (self.holdout_size + self.test_size >= 1.0):
                 raise ValueError("holdout_size and test_size combined must be less than 1.0")
 
+            # The next code uses sklearn train_test_split to split the data into train and test splits.
+            # More information about the API can be found here: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
             if self.holdout:
                 train_test, holdout = train_test_split(self.df,
                                                        test_size=self.holdout_size,
@@ -75,21 +96,59 @@ class DataPipeline:
         except Exception as e:
             raise Exception(f'Error splitting data. {str(e)}')
         
-    def get_train_data(self):
+    def get_train_data(self) -> pd.DataFrame:
+        """
+        Get Train split
+        """
         return self.df[self.df['split'] == 'train']
 
     def get_test_data(self):
+        """
+        Get test split
+        """
         return self.df[self.df['split'] == 'test']
     
     def get_holdout_data(self):
+        """
+        Get holdout split
+        """
         return self.df[self.df['split'] == 'holdout']
 
-    def create_distributions():
+    #TODO: add a function to create a distribution of the data based on the splits.
+    def create_split_distributions():
+        raise NotImplementedError()
+
+    #TODO: add a function to create a distribution of the data based on the target labels.
+    def create_target_distributions():
         raise NotImplementedError()
 
 
-def generate_data(file_path, holdout, test_size, holdout_size, stratify):
+def generate_data(
+    file_path: str,
+    name: str,
+    version: str,
+    holdout: bool,
+    test_size: float,
+    holdout_size: float,
+    stratify: Optional[List[str]]):
+    """
+    Helper function to run DataPipeline class. 
+
+    Args:
+        file_path (str): The path to the file containing the data.
+        name (str): Name of the data.
+        version (str): Data version for tracking.
+        holdout (bool): Returns a third split called holdout split. The default is True.
+        test_size (float): The percentage of the data to be used for testing.
+                            The default is 0.2.
+        holdout_size (float): The percentage of the data to be used for holdout.
+                                The default is 0.5. This field is optional if
+                                holdout is False.
+        stratify (List[str]): A list of columns to stratify on.
+    """
     data_obj = DataPipeline(
+        name=name,
+        version=version,
         file_path=file_path,
         holdout=holdout,
         test_size=test_size,
