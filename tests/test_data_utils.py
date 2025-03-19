@@ -1,7 +1,7 @@
 import os
 import pytest
 import pandas as pd
-from data import DataPipeline, retrieve_data
+from utils.data import DataPipeline, retrieve_data
 
 data_dir = '/tmp/test_data'
 os.makedirs(data_dir, exist_ok=True)
