@@ -2,7 +2,6 @@
 import os
 import mlflow
 import mlflow.sklearn
-import databricks.connect as db_connect
 from mlflow.models.signature import infer_signature
 
 
@@ -44,12 +43,12 @@ def get_model_type(model_type: str):
     }
     return models.get(model_type)
 
-
+"""
 class MLFlowUtils():
     def __init__(self):
         mlflow.login()
         spark_ctx = db_connect.DatabricksSession.builder.serverless(True).getOrCreate()
-
+"""
 
 class ModelPipeline():
     """
