@@ -1,0 +1,19 @@
+{
+  "run_name": "Create_data",
+  "tasks": [
+    {
+      "task_key": "create-ml-data",
+      "notebook_task": {
+        "notebook_path": "/Workspace/dev/sentiment_classifier_mlops/notebooks/create_data",
+        "base_parameters": {
+          "data_name": "sentiment_analysis",
+          "data_version": "1.0.0",
+          "holdout": true,
+          "test_size": 0.2,
+          "holdout_size": 0.5,
+          "stratify": "['Sentiment']"
+        }
+      }
+    }
+  ]
+}
