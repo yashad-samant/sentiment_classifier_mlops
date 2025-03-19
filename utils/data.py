@@ -30,7 +30,6 @@ class DataPipeline:
         holdout_size: float = 0.5,
         stratify: Optional[List[str]] = None):
         
-        self.file_path = file_path
         self.holdout = holdout
         self.test_size = test_size
         self.holdout_size = holdout_size
@@ -128,7 +127,6 @@ class DataPipeline:
 
 
 def generate_data(
-    file_path: str,
     name: str,
     version: str,
     holdout: bool,
