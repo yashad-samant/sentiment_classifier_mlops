@@ -1,4 +1,4 @@
-name: Train Classification Model on Databricks
+name: Create Data for Classification
 
 on:
   workflow_dispatch:  # Allows manual execution
