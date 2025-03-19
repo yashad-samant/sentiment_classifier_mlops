@@ -99,24 +99,6 @@ class DataPipeline:
 
         except Exception as e:
             raise Exception(f'Error splitting data. {str(e)}')
-        
-    def get_train_data(self) -> pd.DataFrame:
-        """
-        Get Train split
-        """
-        return self.df[self.df['split'] == 'train']
-
-    def get_test_data(self):
-        """
-        Get test split
-        """
-        return self.df[self.df['split'] == 'test']
-    
-    def get_holdout_data(self):
-        """
-        Get holdout split
-        """
-        return self.df[self.df['split'] == 'holdout']
 
     #TODO: add a function to create a distribution of the data based on the splits.
     def create_split_distributions():
