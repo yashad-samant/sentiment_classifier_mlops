@@ -19,13 +19,10 @@ from typing import Dict, Any
 
 from utils.data import DataPipeline
 
-# Running loggers for ENV variable
-print(os.environ['MLFLOW_TRACKING_URI'])
-print(os.environ['MLFLOW_ARTIFACTS_PATH'])
-print(os.environ['MLFLOW_REGISTRY_URI'])
-
-
-ARTIFACTS_PATH = os.environ['MLFLOW_ARTIFACTS_PATH']
+# setting uri
+ARTIFACTS_PATH = "artifacts"
+MLFLOW_TRACKING_URI = "databricks"
+MLFLOW_REGISTRY_URI = "file:/Workspace"
 
 
 def get_model_type(model_type: str):
