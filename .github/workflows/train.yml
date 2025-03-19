@@ -5,6 +5,15 @@ on:
     - cron: "0 0 1 */1 *"  # Runs at midnight on the 1st of every month
   workflow_dispatch:  # Allows manual execution
 
+env:
+  # Note the host is an "environment variable" in the Github Environment
+  # while the token is a "secret" in the Github Environment
+  DATABRICKS_HOST: ${{ vars.DATABRICKS_URL }}
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+  MLFLOW_ARTIFACTS_PATH: ${{ vars.MLFLOW_ARTIFACTS_PATH }}
+  MLFLOW_REGISTRY_URI: ${{ var.MLFLOW_REGISTRY_URI }}
+  MLFLOW_TRACKING_URI: ${{ MLFLOW_TRACKING_URI }}
+
 jobs:
   train_model:
     runs-on: ubuntu-latest
@@ -43,11 +52,6 @@ jobs:
       # Create Databricks Job
       #----------------------------------------------
       - name: Create & Run Databricks Job
-        env:
-          # Note the host is an "environment variable" in the Github Environment
-          # while the token is a "secret" in the Github Environment
-          DATABRICKS_HOST: ${{ vars.DATABRICKS_URL }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
           JOB_ID=$(databricks jobs submit --json "@jobs/train_job.json" | jq -r '.job_id')
           echo "JOB_ID=$JOB_ID" >> $GITHUB_ENV

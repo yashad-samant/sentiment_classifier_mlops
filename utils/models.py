@@ -13,11 +13,20 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score
 
 import time
+import logger
 import cloudpickle
 import numpy as np
 from typing import Dict, Any
 
 from utils.data import DataPipeline
+
+
+# Running loggers for ENV variable
+logger.info(os.environ['MLFLOW_TRACKING_URI'])
+logger.info(os.environ['MLFLOW_REGISTRY_URI'])
+logger.info(os.environ['MLFLOW_ARTIFACTS_PATH'])
+
+ARTIFACTS_PATH = os.environ['MLFLOW_ARTIFACTS_PATH']
 
 
 def get_model_type(model_type: str):
@@ -81,55 +90,51 @@ class ModelPipeline():
             X_test (pd.DataFrame): The test data.
             y_test (pd.DataFrame): The test labels.
         """
-        try:
-            with mlflow.start_run():
-                # gets the Sklearn model class based on the model type.
-                model_shell = get_model_type(self.model_type)
+        with mlflow.start_run():
+            # gets the Sklearn model class based on the model type.
+            model_shell = get_model_type(self.model_type)
 
-                # creates model based on the model type and the parameters.
-                model = model_shell(**self.params)
-                
-                # trains the model given train data and labels.
-                model.fit(X_train, y_train)
-                
-                # predict_proba returns [prob_negative, prob_positive], so slice the output with [:, 1]
-                predictions_prob = model.predict_proba(X_test)[:,1]
-                #TODO: get predictions from model threshold
-                predictions = model.predict(X_test)
-                
-                # compute the precision, recall, f1, and auc metrics.
-                auc = roc_auc_score(y_test, predictions_prob)
-                p = precision_score(y_test, predictions.round(3), average='macro')
-                r = recall_score(y_test, predictions.round(3), average='macro')
-                f1 = f1_score(y_test, predictions.round(3), average='macro')
+            # creates model based on the model type and the parameters.
+            model = model_shell(**self.params)
+            
+            # trains the model given train data and labels.
+            model.fit(X_train, y_train)
+            
+            # predict_proba returns [prob_negative, prob_positive], so slice the output with [:, 1]
+            predictions_prob = model.predict_proba(X_test)[:,1]
+            #TODO: get predictions from model threshold
+            predictions = model.predict(X_test)
+            
+            # compute the precision, recall, f1, and auc metrics.
+            auc = roc_auc_score(y_test, predictions_prob)
+            p = precision_score(y_test, predictions.round(3), average='macro')
+            r = recall_score(y_test, predictions.round(3), average='macro')
+            f1 = f1_score(y_test, predictions.round(3), average='macro')
 
-                # log the model metrics for tracking in MLFLOW. 
-                mlflow.log_metric("auc", auc)
-                mlflow.log_metric("precision", p)
-                mlflow.log_metric("recall", r)
-                mlflow.log_metric("f1", f1)
+            # log the model metrics for tracking in MLFLOW. 
+            mlflow.log_metric("auc", auc)
+            mlflow.log_metric("precision", p)
+            mlflow.log_metric("recall", r)
+            mlflow.log_metric("f1", f1)
 
-                # log the model parameters for tracking if present.
-                if len(self.params) > 0:
-                    for key, value in self.params.items():
-                        mlflow.log_param(key, value)
+            # log the model parameters for tracking if present.
+            if len(self.params) > 0:
+                for key, value in self.params.items():
+                    mlflow.log_param(key, value)
 
-                # get the signature so that it can be used for verification while inferencing.
-                signature = infer_signature(X_test, predictions)
-                
-                # TODO: need to set tracking and registry uri in yaml files            
-                mlflow.set_registry_uri("file:/Workspace")
+            # get the signature so that it can be used for verification while inferencing.
+            signature = infer_signature(X_test, predictions)
+            
+            # TODO: need to set tracking and registry uri in yaml files            
+            mlflow.set_registry_uri("file:/Workspace")
 
-                # logs and registers model.
-                # by default the yaml will log the model in mlflow experiments and register the model in local folder.
-                mlflow.sklearn.log_model(
-                    sk_model=model,
-                    artifact_path=artifact_path,
-                    registered_model_name=self.model_name,
-                    signature=signature)
-        
-        except Exception as e:
-            raise str(e)
+            # logs and registers model.
+            # by default the yaml will log the model in mlflow experiments and register the model in local folder.
+            mlflow.sklearn.log_model(
+                sk_model=model,
+                artifact_path=ARTFACTS_PATH,
+                registered_model_name=self.model_name,
+                signature=signature)
             
 
     def inference(self, holdout):
