@@ -2,11 +2,14 @@
   "run_name": "Monthly_Model_Training",
   "tasks": [
     {
-      "task_key": "test-run",
+      "task_key": "run-naive-bayes-with-params",
       "notebook_task": {
         "notebook_path": "/Workspace/dev/sentiment_classifier_mlops/notebooks/train_models",
         "base_parameters": {
-          "file_path": "/Workspace/data/data.csv",
+          "data_name": "sentiment-analysis",
+          "data_version": "1.0.0",
+          "model_type": "naive_bayes",
+          "model_params": {},
           "holdout": true,
           "test_size": 0.2,
           "holdout_size": 0.5,

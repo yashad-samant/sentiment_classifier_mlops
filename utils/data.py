@@ -1,4 +1,5 @@
 # importing required libraries
+import os
 import pandas as pd
 from typing import List, Optional
 from sklearn.model_selection import train_test_split
@@ -20,13 +21,15 @@ class DataPipeline:
                                 holdout is False.
         stratify (List[str]): A list of columns to stratify on.
     """
-    def __init__(self, file_path: str,
-                 name: str,
-                 version: str,
-                 holdout: bool = False,
-                 test_size: float = 0.2,
-                 holdout_size: float = 0.5,
-                 stratify: Optional[List[str]] = None):
+    def __init__(
+        self,
+        name: str,
+        version: str,
+        holdout: bool = False,
+        test_size: float = 0.2,
+        holdout_size: float = 0.5,
+        stratify: Optional[List[str]] = None):
+        
         self.file_path = file_path
         self.holdout = holdout
         self.test_size = test_size
@@ -42,7 +45,8 @@ class DataPipeline:
         try:
             # Read the file and ensure that the file exists and ends with .csv extension
             if self.file_path.endswith('.csv'):
-                self.df = pd.read_csv(self.file_path)
+                self.df = pd.read_csv(os.path.join(
+                    '/Workspace/data', self.__name__, self.__version__, 'data.csv'))
             else:
                 raise Exception('Unsupported file format. We only support CSV files!')
         except Exception as e:

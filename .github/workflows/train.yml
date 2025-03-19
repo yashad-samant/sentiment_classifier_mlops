@@ -5,12 +5,10 @@ on:
     - cron: "0 0 1 */1 *"  # Runs at midnight on the 1st of every month
   workflow_dispatch:  # Allows manual execution
 
-#concurrency: my_environment-train_model
-
 jobs:
   train_model:
     runs-on: ubuntu-latest
-    environment: MY_ENV  # Ensure this environment has Databricks secrets
+    environment: Dev  # Ensure this environment has Databricks secrets
 
     steps:
       #----------------------------------------------
