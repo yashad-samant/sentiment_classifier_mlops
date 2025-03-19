@@ -11,7 +11,7 @@ def test_data_pipeline():
         'feature2': range(10, 20),
         'label': ['A', 'B'] * 5
     })
-    pipeline = DataPipeline(name='sample_dataset', version='v1', holdout=True, test_size=0.2, holdout_size=0.2, stratify=['Sentiment'])
+    pipeline = DataPipeline(name='test', version='v1', holdout=True, test_size=0.2, holdout_size=0.2, stratify=['Sentiment'])
     pipeline.read()
     assert not pipeline.df.empty, "Data should be read successfully."
     
@@ -29,13 +29,13 @@ def test_invalid_split():
         'label': ['A', 'B'] * 5
     })
     
-    pipeline = DataPipeline(name='sample_dataset', version='v1', holdout=True, test_size=0.6, holdout_size=0.5, stratify=['label'])
+    pipeline = DataPipeline(name='test', version='v1', holdout=True, test_size=0.6, holdout_size=0.5, stratify=['label'])
     pipeline.read()
     
     with pytest.raises(ValueError, match="holdout_size and test_size combined must be less than 1.0"):
         pipeline.split()
 
 def test_retrieve_data():
-    df = retrieve_data('sample_dataset', 'v1')
+    df = retrieve_data('test', 'v1')
     assert not df.empty, "Retrieved data should not be empty."
     assert 'split' in df.columns, "Retrieved data should contain 'split' column."
