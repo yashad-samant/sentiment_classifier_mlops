@@ -44,10 +44,10 @@ jobs:
           echo "MLFLOW_ARTIFACTS_PATH=${{ vars.MLFLOW_ARTIFACTS_PATH }}" >> $GITHUB_ENV
           echo "MLFLOW_REGISTRY_URI=${{ vars.MLFLOW_REGISTRY_URI }}" >> $GITHUB_ENV
           echo "MLFLOW_TRACKING_URI=${{ vars.MLFLOW_TRACKING_URI }}" >> $GITHUB_ENV
-          env:
-            MLFLOW_ARTIFACTS_PATH: ${{ vars.MLFLOW_ARTIFACTS_PATH }}
-            MLFLOW_REGISTRY_URI: ${{ vars.MLFLOW_REGISTRY_URI }}
-            MLFLOW_TRACKING_URI: ${{ vars.MLFLOW_TRACKING_URI }}
+        env:
+          MLFLOW_ARTIFACTS_PATH: ${{ vars.MLFLOW_ARTIFACTS_PATH }}
+          MLFLOW_REGISTRY_URI: ${{ vars.MLFLOW_REGISTRY_URI }}
+          MLFLOW_TRACKING_URI: ${{ vars.MLFLOW_TRACKING_URI }}
 
       #----------------------------------------------
       # Install Databricks CLI
