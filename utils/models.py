@@ -1,15 +1,16 @@
+# importing requred libraries
+import os
 import mlflow
-import mlflow.pyfunc
 import mlflow.sklearn
+import databricks.connect as db_connect
 from mlflow.models.signature import infer_signature
-from mlflow.utils.environment import _mlflow_conda_env
 
 
 import sklearn
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score, precision, recall, f1_score
+from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score
 
 import time
 import cloudpickle
@@ -19,80 +20,124 @@ from typing import Dict, Any
 from utils.data import DataPipeline
 
 
-# The predict method of sklearn's RandomForestClassifier returns a binary classification (0 or 1). 
-# The following code creates a wrapper function, SklearnModelWrapper, that uses 
-# the predict_proba method to return the probability that the observation belongs to each class. 
+def get_model_type(model_type: str):
+    """
+    This is a helper function to get the model type based on the model name.
+    Documentation on sklearn can be found here:
+    1. RandomForestClassifier: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
+    2. LogisticRegression: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
+    3. MultinomialNB: https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html
 
-class ModelType():
-    def __init__(self, model_type):
-        models = {
-            'random_forest': RandomForestClassifier,
-            'logistic_regression': LogisticRegression,
-            'svm': SVC,
-            'naive_bayes': MultinomialNB,
-        }
-        return models[model_type]
-
-class SklearnModelWrapper(mlflow.pyfunc.PythonModel):
-  def __init__(self, model):
-    self.model = model
-    
-  def predict(self, context, model_input):
-    return self.model.predict_proba(model_input)[:,1]
+    Args:
+        model_type (str): The type of the model. Currently the code supports RandomForestClassifier, LogisticRegression, MultinomialNB.
+    Returns:
+        sklearn.model
+    """
+    models = {
+        'random_forest': RandomForestClassifier,
+        'logistic_regression': LogisticRegression,
+        'naive_bayes': MultinomialNB,
+    }
+    return models.get(model_type)
 
 
 class ModelPipeline():
-    def __init__(self, model_name, model, signature=None, conda_env=None):
-        self.conda_env =  _mlflow_conda_env(
-            additional_conda_deps=None,
-            additional_pip_deps=["cloudpickle=={}".format(cloudpickle.__version__), "scikit-learn=={}".format(sklearn.__version__)],
-            additional_conda_channels=None,
-            )
+    """
+    Model Pipeline for train and inference. This is a helper class to run the train and
+    inference notebooks. It also contains the train function which is used to train the model and 
+    inference function to load the model. We have packaged MLFlow utilities in here but can be decoupled 
+    in the next iteration.
+    
+    Args:
+        model_name (str): The name of the model.
+        model_type (str): The type of the model. Currently the code supports random_forest, logistic_regression, naive_bayes.
+        params (Dict[str, Any]): The parameters for the model. Please follow SKLEARN DOCS to find out the parameters for the
+            respective models.
+    Returns:
+        None
+    """
+    def __init__(
+        self, 
+        model_name: str, 
+        model_type: str,
+        params: Dict[str, Any] = {}
+        ):
+        self.model_name = model_name
+        self.model_type = model_type
+        self.params = params
 
+    # TODO: Use MLFLOW API to find best runs
     def find_best_model():
         pass
 
-    def register_model():
-        pass
+    #TODO: Break the train function into smaller functions
+    def train(self, X_train, y_train, X_test, y_test) -> None:
+        """
+        Trains, logs and registers the model.
 
-    def train(DataPipeline: DataPipeline, model_name: str, model_type: str, params: Dict[str, Any]):
-        with mlflow.start_run(run_name=model_name):
-            model_shell = ModelType(model_type)
-            model = model_shell(**params)
-            
-            X_train, y_train = DataPipeline.get_train_data()
-            X_test, y_test = DataPipeline.get_test_data()
-            
-            model.fit(X_train, y_train)
-            
-            # predict_proba returns [prob_negative, prob_positive], so slice the output with [:, 1]
-            predictions_test = model.predict_proba(X_test)[:,1]
-            
-            auc_score = roc_auc_score(y_test, predictions_test)
-            precision_score = precision_score(y_test, predictions_test.round(3))
-            recall_score = recall_score(y_test, predictions_test.round(3))
-            f1_score = f1_score(y_test, predictions_test.round(3))
+        Args:
+            X_train (pd.DataFrame): The training data.
+            y_train (pd.DataFrame): The training labels.
+            X_test (pd.DataFrame): The test data.
+            y_test (pd.DataFrame): The test labels.
+        """
+        try:
+            with mlflow.start_run():
+                # gets the Sklearn model class based on the model type.
+                model_shell = get_model_type(self.model_type)
 
-            mlflow.log_param(**params)
-            
-            # Use the area under the ROC curve as a metric.
-            mlflow.log_metric({
-                'auc_score': auc_score,
-                'precision_score': precision_score,
-                'recall_score': recall_score,
-                'f1_score': f1_score
-            })
+                # creates model based on the model type and the parameters.
+                model = model_shell(**self.params)
+                
+                # trains the model given train data and labels.
+                model.fit(X_train, y_train)
+                
+                # predict_proba returns [prob_negative, prob_positive], so slice the output with [:, 1]
+                predictions_prob = model.predict_proba(X_test)[:,1]
+                #TODO: get predictions from model threshold
+                predictions = model.predict(X_test)
+                
+                # compute the precision, recall, f1, and auc metrics.
+                auc = roc_auc_score(y_test, predictions_prob)
+                p = precision_score(y_test, predictions.round(3), average='macro')
+                r = recall_score(y_test, predictions.round(3), average='macro')
+                f1 = f1_score(y_test, predictions.round(3), average='macro')
 
-            wrappedModel = SklearnModelWrapper(model)
-            # Log the model with a signature that defines the schema of the model's inputs and outputs. 
-            # When the model is deployed, this signature will be used to validate inputs.
-            signature = infer_signature(X_train, wrappedModel.predict(None, X_train))
-            
-            # MLflow contains utilities to create a conda environment used to serve models.
-            # The necessary dependencies are added to a conda.yaml file which is logged along with the model.
+                # log the model metrics for tracking in MLFLOW. 
+                mlflow.log_metric("auc", auc)
+                mlflow.log_metric("precision", p)
+                mlflow.log_metric("recall", r)
+                mlflow.log_metric("f1", f1)
 
-            mlflow.pyfunc.log_model(model_name, python_model=wrappedModel, conda_env=conda_env, signature=signature)
-    
-    def inference(DataPipeline: DataPipeline, model):
-        pass
+                # log the model parameters for tracking if present.
+                if len(self.params) > 0:
+                    for key, value in self.params.items():
+                        mlflow.log_param(key, value)
+
+                # get the signature so that it can be used for verification while inferencing.
+                signature = infer_signature(X_test, predictions)
+                
+                # TODO: need to set tracking and registry uri in yaml files            
+                mlflow.set_registry_uri("file:/Workspace")
+
+                # logs and registers model.
+                # by default the yaml will log the model in mlflow experiments and register the model in local folder.
+                mlflow.sklearn.log_model(
+                    sk_model=model,
+                    artifact_path=artifact_path,
+                    registered_model_name=self.model_name,
+                    signature=signature)
+        
+        except Exception as e:
+            raise str(e)
+            
+
+    def inference(self, holdout):
+        logged_model = 'runs:/b50219b5b91243b6a31dc4c74103a593/model'
+
+        # Load model as a PyFuncModel.
+        loaded_model = mlflow.pyfunc.load_model(logged_model)
+
+        # Predict on a Pandas DataFrame.
+        print(loaded_model.predict(holdout))
 
