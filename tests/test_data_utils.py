@@ -3,13 +3,6 @@ import pytest
 import pandas as pd
 from utils.data import DataPipeline, retrieve_data
 
-data_dir = '/tmp/test_data'
-os.makedirs(data_dir, exist_ok=True)
-
-def create_sample_csv(name, data):
-    file_path = os.path.join(data_dir, name, 'raw', 'data.csv')
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    data.to_csv(file_path, index=False)
 
 def test_data_pipeline():
     # Create sample data
@@ -18,9 +11,7 @@ def test_data_pipeline():
         'feature2': range(10, 20),
         'label': ['A', 'B'] * 5
     })
-    create_sample_csv('sample_dataset', data)
-    
-    pipeline = DataPipeline(name='sample_dataset', version='v1', holdout=True, test_size=0.2, holdout_size=0.2, stratify=['label'])
+    pipeline = DataPipeline(name='sample_dataset', version='v1', holdout=True, test_size=0.2, holdout_size=0.2, stratify=['Sentiment'])
     pipeline.read()
     assert not pipeline.df.empty, "Data should be read successfully."
     
@@ -37,9 +28,8 @@ def test_invalid_split():
         'feature2': range(10, 20),
         'label': ['A', 'B'] * 5
     })
-    create_sample_csv('invalid_dataset', data)
     
-    pipeline = DataPipeline(name='invalid_dataset', version='v1', holdout=True, test_size=0.6, holdout_size=0.5, stratify=['label'])
+    pipeline = DataPipeline(name='sample_dataset', version='v1', holdout=True, test_size=0.6, holdout_size=0.5, stratify=['label'])
     pipeline.read()
     
     with pytest.raises(ValueError, match="holdout_size and test_size combined must be less than 1.0"):
