@@ -13,19 +13,17 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score
 
 import time
-import logging
 import cloudpickle
 import numpy as np
 from typing import Dict, Any
 
 from utils.data import DataPipeline
 
-logger = logging.getLogger(__name__)
-
 # Running loggers for ENV variable
-logger.info(os.environ['MLFLOW_TRACKING_URI'])
-logger.info(os.environ['MLFLOW_REGISTRY_URI'])
-logger.info(os.environ['MLFLOW_ARTIFACTS_PATH'])
+print(os.environ['MLFLOW_TRACKING_URI'])
+print(os.environ['MLFLOW_ARTIFACTS_PATH'])
+print(os.environ['MLFLOW_REGISTRY_URI'])
+
 
 ARTIFACTS_PATH = os.environ['MLFLOW_ARTIFACTS_PATH']
 
