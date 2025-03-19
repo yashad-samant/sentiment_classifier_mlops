@@ -5,7 +5,7 @@ import pandas as pd
 from unittest.mock import patch, MagicMock
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import make_classification
-from src.model_pipeline import get_model_type, ModelPipeline  # Adjust import as per your project structure
+from utils.models import get_model_type, ModelPipeline
 
 
 # Mock MLflow (to avoid real logging during tests)
@@ -15,7 +15,7 @@ def mock_mlflow():
         yield
 
 
-# ✅ **Test 1: Model selection works correctly**
+#Model selection works correctly
 @pytest.mark.parametrize("model_type, expected_class", [
     ("random_forest", "RandomForestClassifier"),
     ("logistic_regression", "LogisticRegression"),
@@ -30,7 +30,7 @@ def test_get_model_type(model_type, expected_class):
         assert model is None
 
 
-# ✅ **Test 2: Training pipeline runs without errors**
+#Test 2: Training pipeline runs without errors
 def test_train_pipeline(mock_mlflow):
     # Generate synthetic data
     X, y = make_classification(n_samples=100, n_features=5, random_state=42)
@@ -43,7 +43,7 @@ def test_train_pipeline(mock_mlflow):
     pipeline.train(X_train, y_train, X_test, y_test)
 
 
-# ✅ **Test 3: MLflow logging is called correctly**
+#Test 3: MLflow logging is called correctly
 def test_mlflow_logging(mock_mlflow):
     # Generate synthetic data
     X, y = make_classification(n_samples=50, n_features=3, random_state=42)
@@ -62,7 +62,7 @@ def test_mlflow_logging(mock_mlflow):
         assert mock_log_model.called
 
 
-# ✅ **Test 4: Inference works correctly**
+#Test 4: Inference works correctly
 @patch("mlflow.pyfunc.load_model")
 def test_inference(mock_load_model):
     # Mock MLflow model loading
