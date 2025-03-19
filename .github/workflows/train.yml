@@ -38,16 +38,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      
-      - name: Set ENV Variables
-        run: |
-          echo "MLFLOW_ARTIFACTS_PATH=${{ vars.MLFLOW_ARTIFACTS_PATH }}" >> $GITHUB_ENV
-          echo "MLFLOW_REGISTRY_URI=${{ vars.MLFLOW_REGISTRY_URI }}" >> $GITHUB_ENV
-          echo "MLFLOW_TRACKING_URI=${{ vars.MLFLOW_TRACKING_URI }}" >> $GITHUB_ENV
-        env:
-          MLFLOW_ARTIFACTS_PATH: ${{ vars.MLFLOW_ARTIFACTS_PATH }}
-          MLFLOW_REGISTRY_URI: ${{ vars.MLFLOW_REGISTRY_URI }}
-          MLFLOW_TRACKING_URI: ${{ vars.MLFLOW_TRACKING_URI }}
 
       #----------------------------------------------
       # Install Databricks CLI
@@ -60,6 +50,15 @@ jobs:
       #----------------------------------------------
       - name: Create & Run Databricks Job
         run: |
+          echo "MLFLOW_ARTIFACTS_PATH=${{ vars.MLFLOW_ARTIFACTS_PATH }}" >> $GITHUB_ENV
+          echo "MLFLOW_REGISTRY_URI=${{ vars.MLFLOW_REGISTRY_URI }}" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_URI=${{ vars.MLFLOW_TRACKING_URI }}" >> $GITHUB_ENV
+
           JOB_ID=$(databricks jobs submit --json "@jobs/train_job.json" | jq -r '.job_id')
           echo "JOB_ID=$JOB_ID" >> $GITHUB_ENV
+        env:
+          MLFLOW_ARTIFACTS_PATH: ${{ vars.MLFLOW_ARTIFACTS_PATH }}
+          MLFLOW_REGISTRY_URI: ${{ vars.MLFLOW_REGISTRY_URI }}
+          MLFLOW_TRACKING_URI: ${{ vars.MLFLOW_TRACKING_URI }}
+
 
