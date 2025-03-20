@@ -10,7 +10,7 @@ env:
   DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
 jobs:
-  train_model:
+  create-ml-data:
     runs-on: ubuntu-latest
     environment: Dev  # Ensure this environment has Databricks secrets
 
