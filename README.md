@@ -28,7 +28,7 @@ We need to write a **Python Based CLI** that should be called using **Github Act
 
 ## Overview Architecture
 
-![CI/CD Architecture](https://github.com/yashad-samant/sentiment_classifier_mlops/blob/dev/images/Screenshot%202025-03-19%20at%209.58.54%E2%80%AFPM.png)
+![CI/CD Architecture](https://github.com/yashad-samant/sentiment_classifier_mlops/blob/dev/images/Sentiment%20Analysis%20MLOPS.drawio.png)
 
 ### Workflows
 
@@ -102,3 +102,14 @@ This is a simple notebook which given a data_name, data_version and run_id of th
 ##### Examples
 * The example json to update parameters can be found [here](https://github.com/yashad-samant/sentiment_classifier_mlops/blob/dev/jobs/run_inference_model.json)
 * The example notebook that the above json runs can be found [here](https://github.com/yashad-samant/sentiment_classifier_mlops/blob/dev/jobs/run_inference_model.json)
+
+#### References:
+* https://docs.databricks.com/aws/en/repos/ci-cd-techniques-with-repos
+* https://www.kaggle.com/datasets/sbhatti/financial-sentiment-analysis/code
+* https://www.youtube.com/watch?v=f2XQMFod8kg&t=1928s
+* https://mlflow.org/docs/latest/api_reference/python_api/mlflow.config.html
+* https://docs.databricks.com/aws/en/catalogs/
+* https://docs.databricks.com/aws/en/machine-learning/manage-model-lifecycle/
+* https://docs.databricks.com/api/workspace/jobs/submit
+* https://docs.databricks.com/aws/en/mlflow/end-to-end-example
+* https://docs.databricks.com/aws/en/mlflow/models
