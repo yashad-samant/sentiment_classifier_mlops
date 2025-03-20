@@ -28,8 +28,10 @@ We need to write a **Python Based CLI** that should be called using **Github Act
 
 ## Overview Architecture
 
-![CI/CD Architecture Followed][images/Screenshot 2025-03-19 at 9.58.54 PM.png]
+![CI/CD Architecture Followed][https://github.com/yashad-samant/sentiment_classifier_mlops/blob/dev/images/Screenshot%202025-03-19%20at%209.58.54%E2%80%AFPM.png]
 
 ### Workflows
 
 #### Create ML Data Workflow
+
+In this workflow, the workflow expects raw data to be saved in the folder
