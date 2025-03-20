@@ -28,7 +28,7 @@ We need to write a **Python Based CLI** that should be called using **Github Act
 
 ## Overview Architecture
 
-![CI/CD Architecture Followed][https://github.com/yashad-samant/sentiment_classifier_mlops/blob/dev/images/Screenshot%202025-03-19%20at%209.58.54%E2%80%AFPM.png]
+![alt text][https://github.com/yashad-samant/sentiment_classifier_mlops/blob/dev/images/Screenshot%202025-03-19%20at%209.58.54%E2%80%AFPM.png]
 
 ### Workflows
 
