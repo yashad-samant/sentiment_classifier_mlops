@@ -27,3 +27,5 @@ We need to write a **Python Based CLI** that should be called using **Github Act
 
 
 ## Overview Architecture
+
+![CI/CD Architecture Followed]["images/images/Screenshot 2025-03-19 at 9.58.54 PM.png"]
