@@ -1,0 +1,16 @@
+{
+  "run_name": "Daily_Model_Inference",
+  "tasks": [
+    {
+      "task_key": "inference_model",
+      "notebook_task": {
+        "notebook_path": "/Workspace/dev/sentiment_classifier_mlops/notebooks/inference_models",
+        "base_parameters": {
+          "data_name": "sentiment_analysis",
+          "data_version": "1.0.0",
+          "run_id": "ea24905e0854493a90ba40f1fce6efd0" 
+        }
+      }
+    }
+  ]
+}
