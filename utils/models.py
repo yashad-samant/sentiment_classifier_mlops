@@ -137,14 +137,3 @@ class ModelPipeline():
                 registered_model_name=self.model_name,
                 signature=signature)
             
-
-    def inference(self, run_id: str, holdout: pd.DataFrame):
-        logged_model = f'runs:/{run_id}/model'
-
-        # Load model as a PyFuncModel.
-        loaded_model = mlflow.pyfunc.load_model(logged_model)
-
-        # Predict on a Pandas DataFrame.
-        predictions = loaded_model.predict(holdout)
-        
-
