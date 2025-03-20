@@ -12,7 +12,7 @@ env:
 jobs:
   create-ml-data:
     runs-on: ubuntu-latest
-    environment: PROD  # Ensure this environment has Databricks secrets
+    environment: Dev  # Ensure this environment has Databricks secrets
 
     steps:
       #----------------------------------------------
