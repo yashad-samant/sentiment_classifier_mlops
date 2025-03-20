@@ -1,6 +1,8 @@
-name: Train Classification Model on Databricks
+name: Inference Model on Databricks
 
 on:
+  schedule:
+    - cron: "0 0 1 */1 *"  # Runs at midnight on the 1st of every month
   workflow_dispatch:  # Allows manual execution
 
 env:
@@ -10,7 +12,7 @@ env:
   DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
 jobs:
-  train_model:
+  inference_model:
     runs-on: ubuntu-latest
     environment: Dev  # Ensure this environment has Databricks secrets
 
@@ -48,6 +50,15 @@ jobs:
       #----------------------------------------------
       - name: Create & Run Databricks Job
         run: |
+          echo "MLFLOW_ARTIFACTS_PATH=${{ vars.MLFLOW_ARTIFACTS_PATH }}" >> $GITHUB_ENV
+          echo "MLFLOW_REGISTRY_URI=${{ vars.MLFLOW_REGISTRY_URI }}" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_URI=${{ vars.MLFLOW_TRACKING_URI }}" >> $GITHUB_ENV
 
-          JOB_ID=$(databricks jobs submit --json "@jobs/run_create_data.json" | jq -r '.job_id')
+          JOB_ID=$(databricks jobs submit --json "@jobs/run_inference_model.json" | jq -r '.job_id')
           echo "JOB_ID=$JOB_ID" >> $GITHUB_ENV
+        env:
+          MLFLOW_ARTIFACTS_PATH: ${{ vars.MLFLOW_ARTIFACTS_PATH }}
+          MLFLOW_REGISTRY_URI: ${{ vars.MLFLOW_REGISTRY_URI }}
+          MLFLOW_TRACKING_URI: ${{ vars.MLFLOW_TRACKING_URI }}
+
+

@@ -54,7 +54,7 @@ jobs:
           echo "MLFLOW_REGISTRY_URI=${{ vars.MLFLOW_REGISTRY_URI }}" >> $GITHUB_ENV
           echo "MLFLOW_TRACKING_URI=${{ vars.MLFLOW_TRACKING_URI }}" >> $GITHUB_ENV
 
-          JOB_ID=$(databricks jobs submit --json "@jobs/train_job.json" | jq -r '.job_id')
+          JOB_ID=$(databricks jobs submit --json "@jobs/run_train_model.json" | jq -r '.job_id')
           echo "JOB_ID=$JOB_ID" >> $GITHUB_ENV
         env:
           MLFLOW_ARTIFACTS_PATH: ${{ vars.MLFLOW_ARTIFACTS_PATH }}
